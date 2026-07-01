@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SentinelShield</string>
+    <string name="accessibility_service_description">SentinelShield uses accessibility to detect overlay attacks and clickjacking attempts that could compromise your security.</string>
+</resources>
