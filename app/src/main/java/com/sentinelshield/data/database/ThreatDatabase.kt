@@ -240,4 +240,76 @@ class ThreatDatabase(context: Context) : SQLiteOpenHelper(
         cursor.close()
         return count
     }
+
+    /**
+     * Add a malware hash to the database (used by ThreatFeedUpdater).
+     */
+    fun addMalwareHash(hash: String, malwareName: String, severity: String = "HIGH") {
+        val db = writableDatabase
+        db.execSQL(
+            "INSERT OR IGNORE INTO $TABLE_MALWARE_HASHES ($COL_HASH, $COL_MALWARE_NAME, $COL_SEVERITY, $COL_DATE_ADDED) VALUES (?, ?, ?, ?)",
+            arrayOf(hash, malwareName, severity, System.currentTimeMillis())
+        )
+    }
+
+    /**
+     * Add a phishing URL to the database (used by ThreatFeedUpdater).
+     */
+    fun addPhishingUrl(url: String, threatType: String = "phishing", source: String = "feed") {
+        val db = writableDatabase
+        db.execSQL(
+            "INSERT OR IGNORE INTO $TABLE_PHISHING_URLS ($COL_URL, $COL_THREAT_TYPE, $COL_SOURCE, $COL_DATE_ADDED) VALUES (?, ?, ?, ?)",
+            arrayOf(url, threatType, source, System.currentTimeMillis())
+        )
+    }
+
+    /**
+     * Add a malicious IP to the database (used by ThreatFeedUpdater).
+     */
+    fun addMaliciousIp(ip: String, reason: String = "Threat feed") {
+        val db = writableDatabase
+        db.execSQL(
+            "INSERT OR IGNORE INTO $TABLE_SUSPICIOUS_IPS ($COL_IP, $COL_REASON, $COL_DATE_ADDED) VALUES (?, ?, ?)",
+            arrayOf(ip, reason, System.currentTimeMillis())
+        )
+    }
+
+    /**
+     * Check if a URL is phishing (simple boolean check for PhishingGuard).
+     */
+    fun isKnownPhishingUrl(url: String): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT 1 FROM $TABLE_PHISHING_URLS WHERE ? LIKE '%' || $COL_URL || '%' LIMIT 1",
+            arrayOf(url)
+        )
+        val found = cursor.moveToFirst()
+        cursor.close()
+        return found
+    }
+
+    /**
+     * Get database statistics.
+     */
+    fun getStats(): Map<String, Int> {
+        val db = readableDatabase
+        val stats = mutableMapOf<String, Int>()
+
+        var cursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_MALWARE_HASHES", null)
+        cursor.moveToFirst()
+        stats["malware_hashes"] = cursor.getInt(0)
+        cursor.close()
+
+        cursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_PHISHING_URLS", null)
+        cursor.moveToFirst()
+        stats["phishing_urls"] = cursor.getInt(0)
+        cursor.close()
+
+        cursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_SUSPICIOUS_IPS", null)
+        cursor.moveToFirst()
+        stats["suspicious_ips"] = cursor.getInt(0)
+        cursor.close()
+
+        return stats
+    }
 }

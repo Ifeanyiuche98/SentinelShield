@@ -1,6 +1,6 @@
 # SentinelShield Android App
 
-This repository contains the initial codebase for the SentinelShield Android antivirus application, developed using native Kotlin and Jetpack Compose.
+A custom-built Android antivirus and security application designed for personal device protection. Built with native Kotlin and Jetpack Compose, featuring a Black & Gold theme.
 
 ## 🎨 UI Preview
 
@@ -10,55 +10,96 @@ The mockup showcases the Black & Gold theme (light and dark modes), all 5 main s
 
 ## Project Structure
 
-The project follows a standard Android project structure with a focus on modularity and clean architecture principles. Key directories include:
+```
+app/src/main/java/com/sentinelshield/
+├── MainActivity.kt              # Main entry point
+├── SentinelShieldApp.kt         # Application class (initializes services)
+├── data/
+│   ├── database/                # SQLite threat database
+│   └── models/                  # Data models
+├── navigation/                  # Navigation graph & routes
+├── notifications/               # Smart alert system
+├── screens/                     # UI screens (Compose)
+├── services/
+│   ├── behavioral/              # AI behavioral analysis
+│   ├── network/                 # VPN-based network monitor
+│   ├── overlay/                 # Clickjacking detection
+│   ├── protection/              # Real-time protection service
+│   ├── scanner/                 # Malware, phishing, link scanning
+│   └── updater/                 # Auto-update threat feeds
+├── ui/theme/                    # Black & Gold Material3 theme
+└── viewmodels/                  # ViewModels for all screens
+```
 
-- `app/`: Contains the main application module.
-  - `src/main/java/com/sentinelshield/`: Main source code for the application.
-    - `navigation/`: Defines navigation routes and the navigation graph.
-    - `screens/`: Contains individual Composable screens for the app (Dashboard, Scan Results, etc.).
-    - `ui/theme/`: Defines the app's theme, including colors and typography.
-  - `src/main/res/`: Android resources (layouts, drawables, values, etc.).
+## Features
 
-## Features Implemented (Phase 1)
+### Phase 1 - Foundation
+- Black and Gold theme (Material Design 3, light/dark modes)
+- Dashboard, Scan Results, Permission Auditor, Network Monitor, Settings screens
+- Bottom navigation system
+- Shield app icon
 
-- **Project Structure**: Basic Android project setup with Gradle configuration.
-- **Theme System**: Black and Gold color scheme implemented using Material Design 3 for both light and dark modes.
-- **Core UI**: Placeholder UI for the following screens:
-    - Dashboard
-    - Scan Results
-    - Permission Auditor
-    - Network Monitor
-    - Settings
-- **Navigation**: Bottom navigation bar for switching between the main screens.
-- **App Icon Concept**: A placeholder shield icon drawable is included.
+### Phase 2 - Core Security Engine
+- **Malware Scanner**: Hash-based detection of installed apps against threat database
+- **Permission Auditor**: Risk scoring (0-100), dangerous permission detection
+- **Clickjacking/Overlay Detection**: AccessibilityService-based overlay monitoring
+- **Network Monitor**: VPN-based traffic inspection, flags malicious IP connections
+- **Phishing Scanner**: URL checking against local DB + pattern matching
+- **Real-time Protection**: Auto-scans newly installed/updated apps (foreground service)
+- **Boot Receiver**: Auto-restarts protection on device boot
 
-## Setup Instructions
+### Phase 3 - Intelligence & Automation
+- **Threat Database Auto-Update**: Pulls from MalwareBazaar, Abuse.ch URLhaus, Feodo Tracker every 6 hours via WorkManager
+- **AI Behavioral Anomaly Detection**: Monitors app behavior patterns (data usage, background activity, network patterns) and flags deviations using statistical analysis (Welford's algorithm)
+- **Enhanced Phishing Protection (PhishingGuard)**: Homograph attack detection, typosquatting detection (Levenshtein distance), suspicious TLD flagging, URL pattern analysis, IP-based URL detection
+- **Real-time Link Interception**: AccessibilityService monitors browser URL bars and checks links before they load
+- **Smart Notification System**: Categorized alerts (threats, scans, updates, behavioral) with actionable notifications
 
-To set up and run the project locally, follow these steps:
+## Tech Stack
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/Ifeanyiuche98/SentinelShield.git
-    cd SentinelShield
-    ```
+- **Language**: Kotlin
+- **UI**: Jetpack Compose + Material Design 3
+- **Architecture**: MVVM with ViewModels
+- **Background Tasks**: WorkManager (periodic updates & analysis)
+- **Database**: SQLite (threat signatures)
+- **Min SDK**: 26 (Android 8.0)
+- **Target SDK**: 34 (Android 14)
 
-2.  **Open in Android Studio:**
-    Open the `SentinelShield` project directory in Android Studio (Jellyfish | 2023.3.1 or newer recommended).
+## Building the APK
 
-3.  **Sync Gradle:**
-    Android Studio should automatically prompt you to sync Gradle. If not, manually sync the project with Gradle files by clicking `File > Sync Project with Gradle Files`.
+### Via GitHub Actions (Recommended)
+1. Push to `main` branch triggers automatic build
+2. Go to Actions tab > latest run > Artifacts
+3. Download `SentinelShield-debug` APK
 
-4.  **Run the app:**
-    Select an emulator or a physical device and run the application. The app should build and launch, displaying the Dashboard screen with the implemented theme and navigation.
+### Via Android Studio
+1. Clone the repo
+2. Open in Android Studio
+3. Build > Build Bundle(s) / APK(s) > Build APK(s)
+
+## Installation
+
+1. Transfer APK to your Android device
+2. Enable "Install from unknown sources" for your file manager
+3. Tap the APK to install
+4. Grant requested permissions for full protection
+5. Enable Accessibility Services for overlay & phishing protection
+
+## Permissions Used
+
+| Permission | Purpose |
+|-----------|---------|
+| INTERNET | Threat feed updates |
+| ACCESS_NETWORK_STATE | Network monitoring |
+| QUERY_ALL_PACKAGES | App scanning |
+| FOREGROUND_SERVICE | Real-time protection |
+| POST_NOTIFICATIONS | Security alerts |
+| RECEIVE_BOOT_COMPLETED | Auto-start protection |
+| PACKAGE_USAGE_STATS | Behavioral analysis |
 
 ## Future Development
 
-Future phases will include:
-
-- Malware scanning
-- Permission auditing functionality
-- Clickjacking protection
-- Phishing URL scanning
-- Network traffic monitoring
-- Real-time protection
-- Overlay attack detection
+- Phase 4: TensorFlow Lite model for advanced behavioral detection
+- Phase 5: Anti-theft features (remote lock/wipe)
+- Phase 6: Web protection (safe browsing proxy)
+- Phase 7: Privacy advisor & app privacy scoring
