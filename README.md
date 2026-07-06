@@ -21,7 +21,8 @@ app/src/main/java/com/sentinelshield/
 ├── notifications/               # Smart alert system
 ├── screens/                     # UI screens (Compose)
 ├── services/
-│   ├── behavioral/              # AI behavioral analysis
+│   ├── ai/                      # TFLite AI threat engine (Phase 4)
+│   ├── behavioral/              # Statistical behavioral analysis
 │   ├── network/                 # VPN-based network monitor
 │   ├── overlay/                 # Clickjacking detection
 │   ├── protection/              # Real-time protection service
@@ -55,15 +56,13 @@ app/src/main/java/com/sentinelshield/
 - **Real-time Link Interception**: AccessibilityService monitors browser URL bars and checks links before they load
 - **Smart Notification System**: Categorized alerts (threats, scans, updates, behavioral) with actionable notifications
 
-## Tech Stack
-
-- **Language**: Kotlin
-- **UI**: Jetpack Compose + Material Design 3
-- **Architecture**: MVVM with ViewModels
-- **Background Tasks**: WorkManager (periodic updates & analysis)
-- **Database**: SQLite (threat signatures)
-- **Min SDK**: 26 (Android 8.0)
-- **Target SDK**: 34 (Android 14)
+### Phase 4 - AI Threat Engine
+- **TensorFlow Lite Behavioral Classifier**: ML-based app behavior classification (normal/suspicious/malicious)
+- **Behavior Data Collector**: Real-time collection of app metrics (network activity, background wakeups, data transmission, battery drain, CPU usage, sensor access, IPC frequency)
+- **AI Threat Engine**: Orchestrates all AI detection with trend analysis, confidence scoring, and smart alerting
+- **Heuristic Fallback**: When TFLite model is unavailable, uses weighted heuristic classification
+- **Periodic AI Scans**: WorkManager-scheduled deep scans every 8 hours
+- **Context-Aware Permission Scoring**: Improved permission auditor that considers app category (communication, media, navigation, finance) for realistic risk assessment
 
 ## Building the APK
 
@@ -97,9 +96,19 @@ app/src/main/java/com/sentinelshield/
 | RECEIVE_BOOT_COMPLETED | Auto-start protection |
 | PACKAGE_USAGE_STATS | Behavioral analysis |
 
+## Tech Stack
+
+- **Language**: Kotlin
+- **UI**: Jetpack Compose + Material Design 3
+- **Architecture**: MVVM with ViewModels
+- **AI/ML**: TensorFlow Lite (behavioral classification)
+- **Background Tasks**: WorkManager (periodic updates, analysis & AI scans)
+- **Database**: SQLite (threat signatures)
+- **Min SDK**: 26 (Android 8.0)
+- **Target SDK**: 34 (Android 14)
+
 ## Future Development
 
-- Phase 4: TensorFlow Lite model for advanced behavioral detection
 - Phase 5: Anti-theft features (remote lock/wipe)
 - Phase 6: Web protection (safe browsing proxy)
 - Phase 7: Privacy advisor & app privacy scoring

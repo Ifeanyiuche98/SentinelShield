@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
 import com.sentinelshield.notifications.NotificationHelper
+import com.sentinelshield.services.ai.AIThreatScanWorker
 import com.sentinelshield.services.behavioral.BehavioralMonitorWorker
 import com.sentinelshield.services.updater.ThreatUpdateWorker
 
@@ -20,7 +21,7 @@ class SentinelShieldApp : Application() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        initializePhase3Services()
+        initializeServices()
     }
 
     private fun createNotificationChannel() {
@@ -38,25 +39,27 @@ class SentinelShieldApp : Application() {
     }
 
     /**
-     * Initialize Phase 3 services:
-     * - Threat database auto-update worker
-     * - Behavioral analysis monitor
-     * - Notification channels for all alert types
+     * Initialize all background services:
+     * Phase 3: Threat database auto-update, behavioral analysis
+     * Phase 4: AI-powered threat scanning
      */
-    private fun initializePhase3Services() {
+    private fun initializeServices() {
         try {
             // Initialize notification channels for all alert types
             NotificationHelper(this)
 
-            // Schedule periodic threat feed updates (every 6 hours)
+            // Phase 3: Schedule periodic threat feed updates (every 6 hours)
             ThreatUpdateWorker.schedule(this)
 
-            // Schedule periodic behavioral analysis (every 4 hours)
+            // Phase 3: Schedule periodic behavioral analysis (every 4 hours)
             BehavioralMonitorWorker.schedule(this)
 
-            Log.i(TAG, "Phase 3 services initialized: auto-update + behavioral monitor")
+            // Phase 4: Schedule AI-powered threat scans (every 8 hours)
+            AIThreatScanWorker.schedule(this)
+
+            Log.i(TAG, "All services initialized: threat updates + behavioral monitor + AI engine")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize Phase 3 services", e)
+            Log.e(TAG, "Failed to initialize services", e)
         }
     }
 }
