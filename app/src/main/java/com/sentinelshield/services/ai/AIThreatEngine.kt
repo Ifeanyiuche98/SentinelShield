@@ -167,14 +167,18 @@ class AIThreatEngine(private val context: Context) {
      * Send a threat notification to the user.
      */
     private fun sendThreatNotification(result: AIThreatResult) {
-        val title = when (result.classification.classification) {
-            AppBehaviorClassifier.CLASS_MALICIOUS -> "⚠️ Malicious App Detected"
-            AppBehaviorClassifier.CLASS_SUSPICIOUS -> "⚡ Suspicious Activity"
-            else -> "Security Notice"
+        val severity = when (result.classification.classification) {
+            AppBehaviorClassifier.CLASS_MALICIOUS -> "Critical"
+            AppBehaviorClassifier.CLASS_SUSPICIOUS -> "Medium"
+            else -> "Low"
         }
 
-        val message = "${result.appName}: ${result.recommendation}"
-        notificationHelper.showThreatNotification(title, message)
+        notificationHelper.showThreatDetected(
+            appName = result.appName,
+            packageName = result.packageName,
+            threatDescription = result.recommendation,
+            severity = severity
+        )
     }
 
     /**
