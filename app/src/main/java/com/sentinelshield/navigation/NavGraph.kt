@@ -29,5 +29,8 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
         composable(Screen.Settings.route) {
             SettingsScreen()
         }
+        composable(Screen.AntiTheft.route) {
+            AntiTheftScreen()
+        }
     }
 }

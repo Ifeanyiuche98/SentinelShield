@@ -64,6 +64,16 @@ app/src/main/java/com/sentinelshield/
 - **Periodic AI Scans**: WorkManager-scheduled deep scans every 8 hours
 - **Context-Aware Permission Scoring**: Improved permission auditor that considers app category (communication, media, navigation, finance) for realistic risk assessment
 
+### Phase 5 - Anti-Theft Protection
+- **Remote Lock**: Lock device instantly via SMS command (SENTINEL_LOCK_<PIN>)
+- **Remote Wipe**: Factory reset device remotely via SMS (SENTINEL_WIPE_<PIN>)
+- **GPS Location Tracking**: Get device location with Google Maps link via SMS (SENTINEL_LOCATE_<PIN>)
+- **Loud Alarm**: Trigger max-volume alarm remotely via SMS (SENTINEL_ALARM_<PIN>)
+- **Intruder Camera**: Capture front camera photo on failed unlock attempts or remotely (SENTINEL_PHOTO_<PIN>)
+- **SIM Change Detection**: Alerts trusted number if SIM card is swapped
+- **Device Admin Integration**: Enables system-level lock/wipe capabilities
+- **Anti-Theft Setup Screen**: Full UI for configuring PIN, trusted number, and all anti-theft settings
+
 ## Building the APK
 
 ### Via GitHub Actions (Recommended)
@@ -95,6 +105,10 @@ app/src/main/java/com/sentinelshield/
 | POST_NOTIFICATIONS | Security alerts |
 | RECEIVE_BOOT_COMPLETED | Auto-start protection |
 | PACKAGE_USAGE_STATS | Behavioral analysis |
+| RECEIVE_SMS / SEND_SMS | Anti-theft SMS commands |
+| ACCESS_FINE_LOCATION | Device tracking |
+| CAMERA | Intruder photo capture |
+| READ_PHONE_STATE | SIM change detection |
 
 ## Tech Stack
 
@@ -109,6 +123,6 @@ app/src/main/java/com/sentinelshield/
 
 ## Future Development
 
-- Phase 5: Anti-theft features (remote lock/wipe)
 - Phase 6: Web protection (safe browsing proxy)
 - Phase 7: Privacy advisor & app privacy scoring
+- Phase 8: App lock (biometric/PIN lock for individual apps)
